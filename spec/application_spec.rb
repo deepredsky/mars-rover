@@ -1,24 +1,27 @@
 require 'spec_helper'
 require 'application'
 
-describe Application do
+describe MarsRover::Application do
   before(:each) do
-    @application = Application.new
-    @application.stub!(:gets){ "some instruction\n"}
-  end
-  it "gets the input from command line" do
-    @application.deploy
-    @application.input.should == "some instruction"
+    @application = MarsRover::Application.new
+    @application.stub(:input).and_return(input)
   end
 
   it "parses the input" do
-    InputParser.should_receive(:parse)
+    MarsRover::InputParser.should_receive(:parse).and_return(stub(:rovers => []))
     @application.deploy
   end
 
   it "displays the result" do
-    @application.stub!(:result){"output test"}
-    @application.should_receive(:puts).with("output test")
+    @application.should_receive(:puts).with("5 1 E")
     @application.deploy
+  end
+
+  def input
+    <<-EOF
+5 5
+3 3 E 
+MMRMMRMRRM
+    EOF
   end
 end
